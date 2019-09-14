@@ -61,9 +61,7 @@ class GraphScreen(object):
         self.screen.fill(LIGHT_GRAY)
         # Draw edges
         for edge in self.edges:
-            pygame.draw.line(
-                self.screen, edge.color, (edge.node_start.posX,
-                                          edge.node_start.posY), (edge.node_end.posX, edge.node_end.posY), 3)
+            edge.draw(self.screen)
         # Draw Nodes
         for node in self.nodes:
             node_text = self.font.render(str(node.value), True, WHITE)

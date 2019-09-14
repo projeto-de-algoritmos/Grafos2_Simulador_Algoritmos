@@ -17,6 +17,12 @@ class Edge(object):
         self.value = Edge.index
         Edge.index += 1
 
+    def draw(self, screen):
+        pygame.draw.line(
+            screen, self.color, (
+                self.node_start.posX, self.node_start.posY), (
+                    self.node_end.posX, self.node_end.posY), 3)
+
 
 class EdgeDirected(Edge):
     def __init__(self):
