@@ -11,78 +11,126 @@ class Edge(object):
     path_tracked_color = YELLOW
 
     def __init__(self):
-        self.node_start: Node
-        self.node_end: Node
+        self.__node_start: Node
+        self.__node_end: Node
         self.color = Edge.no_path_tracking_color
         self.value = Edge.index
+        self.thickness = 7
         Edge.index += 1
+
+    @property
+    def node_start(self):
+        return self.__node_start
+
+    @node_start.setter
+    def node_start(self, node):
+        self.__node_start = node
+
+    @property
+    def node_end(self):
+        return self.__node_end
+
+    @node_end.setter
+    def node_end(self, node):
+        self.__node_end = node
 
     def draw(self, screen):
         pygame.draw.line(
             screen, self.color, (
-                self.node_start.posX, self.node_start.posY), (
-                    self.node_end.posX, self.node_end.posY), 3)
+                self.__node_start.posX, self.__node_start.posY), (
+                    self.node_end.posX, self.node_end.posY), self.thickness)
 
 
 class EdgeDirected(Edge):
     def __init__(self):
-        self.node_start: Node
-        self.node_end: Node
+        self.__node_start: Node = None
+        self.__node_end: Node = None
         self.color = Edge.no_path_tracking_color
         self.value = Edge.index
+        self.thickness = 5
+        # points of edge arrow
+        self.px = (0, 0)
+        self.py = (0, 0)
+        self.p2 = (0, 0)
+        self.p3 = (0, 0)
+        self.p4 = (0, 0)
+        self.p5 = (0, 0)
+        self.p6 = (0, 0)
+        self.p7 = (0, 0)
         Edge.index += 1
 
+    @property
+    def node_start(self):
+        return self.__node_start
+
+    @node_start.setter
+    def node_start(self, node):
+        self.__node_start = node
+        if self.__node_start and self.__node_end:
+            self.calculate_arrow()
+
+    @property
+    def node_end(self):
+        return self.__node_end
+
+    @node_end.setter
+    def node_end(self, node):
+        self.__node_end = node
+        if self.__node_start and self.__node_end:
+            self.calculate_arrow()
+
+    def draw(self, screen):
+        self.calculate_arrow()
+        pygame.draw.polygon(screen, self.color, ((
+            self.px, self.py), self.p2, self.p3, self.p4, self.p5, self.p6, self.p7))
+
     def calculate_arrow(self):
-        # Draw arrow
         # nodes coordinates
-        nodex_start = 200
-        nodey_start = 200
-        nodex_end = 100
-        nodey_end = 100
+        node_startX = self.__node_start.posX
+        node_startY = self.__node_start.posY
+        node_endX = self.__node_end.posX
+        node_endY = self.__node_end.posY
         # convert to default coordinates
-        edge_thickness = 5
-        edgex_start = nodex_start
-        edgey_start = nodey_start - edge_thickness/2
+
+        edgex_start = node_startX
+        edgey_start = node_startY - self.thickness/2
         arrowhead_sizex = 20
         arrowhead_sizey = 20
-        lenghtX = abs(nodex_end - nodex_start) - arrowhead_sizex
-        lenghtY = abs(nodey_end - nodey_start) - arrowhead_sizey
+        node_radius_recoil = self.node_end.radius
+        lenghtX = abs(node_endX - node_startX) - \
+            arrowhead_sizex - node_radius_recoil
+        lenghtY = abs(node_endY - node_startY) - \
+            arrowhead_sizey - node_radius_recoil
         lenght = sqrt(pow(lenghtX, 2) + pow(lenghtY, 2))
         # arrow default coordinates
-        px, py = edgex_start, edgey_start
-        p2 = px, py + edge_thickness
-        p3 = px + lenght, p2[1]
-        p4 = p3[0], p3[1] + (arrowhead_sizey - edge_thickness)/2
+        self.px, self.py = edgex_start, edgey_start
+        self.p2 = self.px, self.py + self.thickness
+        self.p3 = self.px + lenght, self.p2[1]
+        self.p4 = self.p3[0], self.p3[1] + (arrowhead_sizey - self.thickness)/2
         # arrowhead ====
-        p5 = p4[0] + arrowhead_sizex, py + edge_thickness/2
+        self.p5 = self.p4[0] + arrowhead_sizex, self.py + self.thickness/2
         # ==============
-        p6 = p4[0], p4[1] - arrowhead_sizey
-        p7 = p6[0], py
+        self.p6 = self.p4[0], self.p4[1] - arrowhead_sizey
+        self.p7 = self.p6[0], self.py
 
         # tan(angle) = coefficient angular
         try:
-            coefficient_angular = (nodey_end - nodey_start) / \
-                (nodex_end - nodex_start)
+            coefficient_angular = (node_endY - node_startY) / \
+                (node_endX - node_startX)
             angle = atan(coefficient_angular)
-            if angle == 0 and nodex_end <= nodex_start:
+            if angle == 0 and node_endX <= node_startX:
                 angle = pi
-            if nodex_end <= nodex_start and nodey_end > nodey_start:
-                angle = 1.570796 - angle
-            elif nodex_end <= nodex_start and nodey_end <= nodey_start:
-                angle = -1.570796 - angle
+            elif node_endX <= node_startX:
+                angle = -pi + angle
         except:
             # error divide by 0
-            if nodey_end > nodey_start:
+            if node_endY > node_startY:
                 angle = 1.570796
             else:
                 angle = -1.570796
 
         # transform to real rotate
-        p2, p3, p4, p5, p6, p7 = self.rotate_arrow(
-            angle, (px, py), p2, p3, p4, p5, p6, p7)
-
-        pygame.draw.polygon(self.screen, DARK_GRAY, ((
-            px, py), p2, p3, p4, p5, p6, p7))
+        self.rotate_arrow(angle)
 
     def rotate_point(self, a, x1, y1, xbase, ybase):
         xbase_rel = (cos(a) * xbase - sin(a)*ybase) - xbase
@@ -91,11 +139,17 @@ class EdgeDirected(Edge):
         y2 = sin(a) * x1 + cos(a)*y1
         return x2 - xbase_rel, y2 - ybase_rel
 
-    def rotate_arrow(self, angle, pbase, p2, p3, p4, p5, p6, p7):
-        p2 = self.rotate_point(angle, p2[0], p2[1], pbase[0], pbase[1])
-        p3 = self.rotate_point(angle, p3[0], p3[1], pbase[0], pbase[1])
-        p4 = self.rotate_point(angle, p4[0], p4[1], pbase[0], pbase[1])
-        p5 = self.rotate_point(angle, p5[0], p5[1], pbase[0], pbase[1])
-        p6 = self.rotate_point(angle, p6[0], p6[1], pbase[0], pbase[1])
-        p7 = self.rotate_point(angle, p7[0], p7[1], pbase[0], pbase[1])
-        return p2, p3, p4, p5, p6, p7
+    def rotate_arrow(self, angle):
+        pbase = (self.px, self.py)
+        self.p2 = self.rotate_point(
+            angle, self.p2[0], self.p2[1], pbase[0], pbase[1])
+        self.p3 = self.rotate_point(
+            angle, self.p3[0], self.p3[1], pbase[0], pbase[1])
+        self.p4 = self.rotate_point(
+            angle, self.p4[0], self.p4[1], pbase[0], pbase[1])
+        self.p5 = self.rotate_point(
+            angle, self.p5[0], self.p5[1], pbase[0], pbase[1])
+        self.p6 = self.rotate_point(
+            angle, self.p6[0], self.p6[1], pbase[0], pbase[1])
+        self.p7 = self.rotate_point(
+            angle, self.p7[0], self.p7[1], pbase[0], pbase[1])

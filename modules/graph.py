@@ -2,7 +2,7 @@ from copy import deepcopy
 import random
 from modules.config import *
 from modules.node import Node
-from modules.edge import Edge
+from modules.edge import Edge, EdgeDirected
 
 
 class Graph(object):
@@ -56,15 +56,26 @@ class Graph(object):
         neighbors = nodes
 
         for neighbor in neighbors:
-            edge = self.__make_edge_screen(node, neighbor)
+            edge = Edge()
+            edge = self.__make_edge_screen(node, neighbor, edge)
             node.add_neighbor(neighbor, edge)
             neighbor.add_neighbor(node, edge)
             self.edges.append(edge)
 
         return neighbors
 
-    def __make_edge_screen(self, node1, node2, color=Edge.no_path_tracking_color):
-        edge = Edge()
+    def create_relationship_directed(self, node, nodes: list):
+        neighbors = nodes
+
+        for neighbor in neighbors:
+            edge = EdgeDirected()
+            edge = self.__make_edge_screen(node, neighbor, edge)
+            node.add_neighbor(neighbor, edge)
+            self.edges.append(edge)
+
+        return neighbors
+
+    def __make_edge_screen(self, node1, node2, edge, color=Edge.no_path_tracking_color):
         edge.node_start = node1
         edge.node_end = node2
         edge.color = color
@@ -156,7 +167,8 @@ class Graph(object):
             neighbors = self.__return_random_nodes(
                 node, qtt_average, qtt_edges_remainder)
             qtt_edges_remainder -= len(neighbors)
-            self.create_relationship(node, neighbors)
+            # self.create_relationship(node, neighbors)
+            self.create_relationship_directed(node, neighbors)
             index_node = (index_node + 1) % (qtt_nodes)
 
     def automatic_generation_graph(self, qtt_nodes: int, qtt_edges: int):
