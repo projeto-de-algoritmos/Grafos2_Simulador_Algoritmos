@@ -1,3 +1,5 @@
+import pygame
+
 from modules.config import *
 
 
@@ -19,9 +21,29 @@ class Node(object):
         self.neighbors = []
         self.color = None
         self.__original_color = None
-        self.posX = None
-        self.posY = None
+        self.__posX = None
+        self.__posY = None
         self.radius = NODE_RADIUS
+        self.txt_posX = None
+        self.txt_posY = None
+
+    @property
+    def posX(self):
+        return self.__posX
+
+    @property
+    def posY(self):
+        return self.__posY
+
+    @posX.setter
+    def posX(self, pos):
+        self.__posX = pos
+        self.txt_posX = self.calc_txt_node(self.posX)
+
+    @posY.setter
+    def posY(self, pos):
+        self.__posY = pos
+        self.txt_posY = self.calc_txt_node(self.posY)
 
     @property
     def original_color(self):
@@ -43,3 +65,7 @@ class Node(object):
         for neighbor in self.neighbors:
             values.append(neighbor.value)
         return values
+
+    def calc_txt_node(self, pos):
+        return pos - self.radius / \
+            (self.radius * 4 / NODE_RADIUS_DEFAULT)

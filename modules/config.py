@@ -11,5 +11,7 @@ WHITE = (255, 255, 255)
 LIGHT_GRAY = (200, 200, 200)
 DARK_GRAY = (50, 50, 50)
 
-NODE_RADIUS = 20
+# do not change NODE_RADIUS_DEFAULT, it means the value default for calculate nodes proportion
+NODE_RADIUS_DEFAULT = 20
+NODE_RADIUS = 30
 MIN_DISTANCE_BETWEEN_NODES = NODE_RADIUS * 3

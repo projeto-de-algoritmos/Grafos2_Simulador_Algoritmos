@@ -7,6 +7,24 @@ from modules.config import *
 from modules.screen_objects import Button
 
 
+def rotate_point(a, x1, y1, xbase, ybase):
+    xbase_rel = (cos(a) * xbase - sin(a)*ybase) - xbase
+    ybase_rel = (sin(a) * xbase + cos(a)*ybase) - ybase
+    x2 = cos(a) * x1 - sin(a)*y1
+    y2 = sin(a) * x1 + cos(a)*y1
+    return x2 - xbase_rel, y2 - ybase_rel
+
+
+def rotate_arrow(angle, pbase, p2, p3, p4, p5, p6, p7):
+    p2 = rotate_point(angle, p2[0], p2[1], pbase[0], pbase[1])
+    p3 = rotate_point(angle, p3[0], p3[1], pbase[0], pbase[1])
+    p4 = rotate_point(angle, p4[0], p4[1], pbase[0], pbase[1])
+    p5 = rotate_point(angle, p5[0], p5[1], pbase[0], pbase[1])
+    p6 = rotate_point(angle, p6[0], p6[1], pbase[0], pbase[1])
+    p7 = rotate_point(angle, p7[0], p7[1], pbase[0], pbase[1])
+    return p2, p3, p4, p5, p6, p7
+
+
 class GraphScreen(object):
     def __init__(self, screen, screen_manager, clock):
         self.screen = screen
@@ -65,8 +83,28 @@ class GraphScreen(object):
                                           edge.node_start.posY), (edge.node_end.posX, edge.node_end.posY), 3)
         # Draw Nodes
         for node in self.nodes:
+            node_text = self.font.render(str(node.value), True, WHITE)
             pygame.gfxdraw.filled_circle(
                 self.screen, node.posX, node.posY, node.radius, node.color)
+            self.screen.blit(node_text, (node.txt_posX, node.txt_posY))
+
+        # Draw arrow
+        px, py = 200, 200
+        p2 = px, py + 5
+        p3 = px + 20, py + 5
+        p4 = px + 20, py + 15
+        p5 = px + 30, py + 2.5
+        p6 = px + 20, py - 10
+        p7 = px + 20, py
+
+        pygame.draw.polygon(self.screen, BLACK, ((
+            px, py), p2, p3, p4, p5, p6, p7))
+
+        p2, p3, p4, p5, p6, p7 = rotate_arrow(
+            0.5, (px, py), p2, p3, p4, p5, p6, p7)
+
+        pygame.draw.polygon(self.screen, BLACK, ((
+            px, py), p2, p3, p4, p5, p6, p7))
 
         # Draw Buttons
         self.button_menu.draw(self.screen)

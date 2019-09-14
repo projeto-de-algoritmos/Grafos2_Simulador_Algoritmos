@@ -61,7 +61,10 @@ def depth_first_search(graph, initial_node: Node, end_node: Node):
     '''
         Funcao auxiliar a depth first recursion, para desenhar o caminho original
     '''
-    result = depth_first_search_recursion(graph, initial_node, end_node)
+    node_start = deepcopy(initial_node)
+    node_end = deepcopy(end_node)
+
+    result = depth_first_search_recursion(graph, node_start, node_end)
     if result != None:
         graph.change_color_node(
             initial_node, Node.path_tracked_color)
@@ -73,7 +76,7 @@ def depth_first_search(graph, initial_node: Node, end_node: Node):
 
 
 def depth_first_search_recursion(graph, initial_node: Node, end_node: Node):
-    node = deepcopy(initial_node)
+    node = initial_node
 
     node.visited = True
     node.parent = type('', (), {})()

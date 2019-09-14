@@ -1,5 +1,7 @@
+import pygame
 from modules.config import *
 from modules.node import Node
+
 
 class Edge(object):
     index = 0
