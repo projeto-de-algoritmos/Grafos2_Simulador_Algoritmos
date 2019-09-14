@@ -89,13 +89,29 @@ class GraphScreen(object):
             self.screen.blit(node_text, (node.txt_posX, node.txt_posY))
 
         # Draw arrow
-        px, py = 200, 200
-        p2 = px, py + 5
-        p3 = px + 20, py + 5
-        p4 = px + 20, py + 15
-        p5 = px + 30, py + 2.5
-        p6 = px + 20, py - 10
-        p7 = px + 20, py
+        # nodes coordinates
+        nodex_start = 200
+        nodey_start = 200
+        nodex_end = 300
+        nodey_end = 200
+        # convert to default coordinates
+        edge_thickness = 5
+        edgex_start = 200
+        edgey_start = 200 - edge_thickness/2
+        edgex_end = 300
+        edgey_end = edgey_start
+        arrowhead_sizex = 10
+        arrowhead_sizey = 20
+        # arrow coordinates
+        px, py = edgex_start, edgey_start
+        p2 = px, py + edge_thickness
+        p3 = edgex_end - arrowhead_sizex, p2[1]
+        p4 = p3[0], p3[1] + (arrowhead_sizey - edge_thickness)/2
+        # arrowhead ====
+        p5 = p4[0] + arrowhead_sizex, py + edge_thickness/2
+        # ==============
+        p6 = p4[0], p4[1] - arrowhead_sizey
+        p7 = p6[0], py
 
         pygame.draw.polygon(self.screen, BLACK, ((
             px, py), p2, p3, p4, p5, p6, p7))
