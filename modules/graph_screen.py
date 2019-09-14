@@ -2,7 +2,7 @@ import pygame
 import pygame.gfxdraw
 from pygame.locals import *
 import random
-from math import cos, sin
+from math import cos, sin, atan, sqrt, pi
 from modules.config import *
 from modules.screen_objects import Button
 
@@ -92,20 +92,21 @@ class GraphScreen(object):
         # nodes coordinates
         nodex_start = 200
         nodey_start = 200
-        nodex_end = 300
-        nodey_end = 200
+        nodex_end = 100
+        nodey_end = 100
         # convert to default coordinates
         edge_thickness = 5
-        edgex_start = 200
-        edgey_start = 200 - edge_thickness/2
-        edgex_end = 300
-        edgey_end = edgey_start
+        edgex_start = nodex_start
+        edgey_start = nodey_start - edge_thickness/2
         arrowhead_sizex = 10
         arrowhead_sizey = 20
-        # arrow coordinates
+        lenghtX = abs(nodex_end - nodex_start) - arrowhead_sizex
+        lenghtY = abs(nodey_end - nodey_start) - arrowhead_sizey
+        lenght = sqrt(pow(lenghtX, 2) + pow(lenghtY, 2))
+        # arrow default coordinates
         px, py = edgex_start, edgey_start
         p2 = px, py + edge_thickness
-        p3 = edgex_end - arrowhead_sizex, p2[1]
+        p3 = px + lenght, p2[1]
         p4 = p3[0], p3[1] + (arrowhead_sizey - edge_thickness)/2
         # arrowhead ====
         p5 = p4[0] + arrowhead_sizex, py + edge_thickness/2
@@ -116,10 +117,29 @@ class GraphScreen(object):
         pygame.draw.polygon(self.screen, BLACK, ((
             px, py), p2, p3, p4, p5, p6, p7))
 
-        p2, p3, p4, p5, p6, p7 = rotate_arrow(
-            0.5, (px, py), p2, p3, p4, p5, p6, p7)
+        # tan(angle) = coefficient angular
+        try:
+            coefficient_angular = (nodey_end - nodey_start) / \
+                (nodex_end - nodex_start)
+            angle = atan(coefficient_angular)
+            if angle == 0 and nodex_end <= nodex_start:
+                angle = pi
+            if nodex_end <= nodex_start and nodey_end > nodey_start:
+                angle = 1.570796 - angle
+            elif nodex_end <= nodex_start and nodey_end <= nodey_start:
+                angle = -1.570796 - angle
+        except:
+            # error divide by 0
+            if nodey_end > nodey_start:
+                angle = 1.570796
+            else:
+                angle = -1.570796
 
-        pygame.draw.polygon(self.screen, BLACK, ((
+        # transform to real rotate
+        p2, p3, p4, p5, p6, p7 = rotate_arrow(
+            angle, (px, py), p2, p3, p4, p5, p6, p7)
+
+        pygame.draw.polygon(self.screen, DARK_GRAY, ((
             px, py), p2, p3, p4, p5, p6, p7))
 
         # Draw Buttons
