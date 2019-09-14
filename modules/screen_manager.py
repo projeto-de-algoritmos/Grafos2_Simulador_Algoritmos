@@ -5,6 +5,7 @@ from modules.config import *
 from modules.menu_screen import Menu
 from modules.graph_screen import GraphScreen
 from modules.graph import Graph
+from modules.search_methods import breadth_search, depth_first_search
 
 
 class Screen(object):
@@ -25,7 +26,8 @@ class Screen(object):
             'modules/fonts/roboto/Roboto-Black.ttf', 15)
 
         # init programm with menu screen
-        self.switch_to_menu()
+        # self.switch_to_menu()
+        self.switch_to_graph()
 
     def switch_to_menu(self):
         del self.menu
@@ -39,10 +41,12 @@ class Screen(object):
 
         self.graph_screen = GraphScreen(self.screen, self, self.clock)
         self.graph = Graph(self.graph_screen)
+
+        self.graph_screen.set_graph(self.graph)
         self.graph_screen.set_generate_graph(
             self.graph.automatic_generation_graph)
         self.graph_screen.set_search_algorithm(
-            self.graph.breadth_search, self.graph.depth_first_search)
+            breadth_search, depth_first_search)
 
         self.graph_screen.start(qtt_nodes, qtt_edges)
         self.keys_listener_selected = self.graph_screen.keys_listener

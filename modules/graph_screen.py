@@ -16,6 +16,7 @@ class GraphScreen(object):
             'modules/fonts/roboto/Roboto-Black.ttf', 15)
 
         # graph
+        self.graph = None
         self.nodes = []
         self.edges = []
         self.enqueue_nodes = []
@@ -40,6 +41,9 @@ class GraphScreen(object):
         self.button_current_search = self.button_type_bfs
         self.generate_graph(qtt_nodes, qtt_edges)
 
+    def set_graph(self, graph):
+        self.graph = graph
+
     def set_generate_graph(self, generate_graph):
         self.generate_graph = generate_graph
 
@@ -62,7 +66,7 @@ class GraphScreen(object):
         # Draw Nodes
         for node in self.nodes:
             pygame.gfxdraw.filled_circle(
-                self.screen, node.posX, node.posY, NODE_RADIUS, node.color)
+                self.screen, node.posX, node.posY, node.radius, node.color)
 
         # Draw Buttons
         self.button_menu.draw(self.screen)
@@ -173,7 +177,7 @@ class GraphScreen(object):
         print()
         if len(self.enqueue_nodes) >= 2:
             self.search_algorithm_current(
-                self.enqueue_nodes[0], self.enqueue_nodes[1])
+                self.graph, self.enqueue_nodes[0], self.enqueue_nodes[1])
             self.enqueue_nodes = []
 
     def selected_node(self, position):

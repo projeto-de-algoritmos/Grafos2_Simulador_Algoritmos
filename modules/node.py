@@ -1,5 +1,6 @@
 from modules.config import *
 
+
 class Node(object):
     indexes_used = []
     path_tracking_color = LIGHT_BLUE
@@ -20,6 +21,7 @@ class Node(object):
         self.__original_color = None
         self.posX = None
         self.posY = None
+        self.radius = NODE_RADIUS
 
     @property
     def original_color(self):
