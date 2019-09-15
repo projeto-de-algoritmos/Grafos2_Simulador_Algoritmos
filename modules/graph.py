@@ -8,6 +8,7 @@ from modules.edge import Edge, EdgeDirected
 class Graph(object):
     def __init__(self, screen):
         self.screen = screen
+        self.edge_type: int = 0
         self.nodes = []
         self.edges = []
         self.array_nodes_posX = []
@@ -37,6 +38,9 @@ class Graph(object):
         self.array_nodes_posX.append(posX)
         self.array_nodes_posY.append(posY)
         return (posX, posY)
+
+    def set_edge_type(self, edge_type):
+        self.edge_type = edge_type
 
     def create_nodes(self, values=[]):
         nodes = []
@@ -167,8 +171,10 @@ class Graph(object):
             neighbors = self.__return_random_nodes(
                 node, qtt_average, qtt_edges_remainder)
             qtt_edges_remainder -= len(neighbors)
-            self.create_relationship(node, neighbors)
-            # self.create_relationship_directed(node, neighbors)
+            if self.edge_type == 0:
+                self.create_relationship(node, neighbors)
+            else:
+                self.create_relationship_directed(node, neighbors)
             index_node = (index_node + 1) % (qtt_nodes)
 
     def automatic_generation_graph(self, qtt_nodes: int, qtt_edges: int):

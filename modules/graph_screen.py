@@ -5,7 +5,6 @@ import random
 from math import cos, sin, atan, sqrt, pi
 from modules.config import *
 from modules.screen_objects import Button
-from modules.edge import EdgeDirected
 
 
 class GraphScreen(object):
@@ -26,6 +25,7 @@ class GraphScreen(object):
         self.search_algorithm_current = None
         self.dijkstra = None
         self.generate_graph = None
+        self.edge_current = None
 
         # objects
         self.text_warning = ''
@@ -63,6 +63,9 @@ class GraphScreen(object):
 
     def set_search_algorithm_current(self, search_algorithm):
         self.search_algorithm_current = search_algorithm
+
+    def set_edge_current(self, edge_type):
+        self.edge_current = edge_type
 
     def draw(self, clock_fps=30):
         # redraw screen

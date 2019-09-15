@@ -17,7 +17,7 @@ class Edge(object):
         self.__node_end: Node = None
         self.color = Edge.no_path_tracking_color
         self.value = Edge.index
-        self.thickness = 7
+        self.thickness = 5
         self.lenght = 0
         self.lenght_posX = None
         self.lenght_posY = None

@@ -7,6 +7,7 @@ from modules.graph_screen import GraphScreen
 from modules.graph import Graph
 from modules.search_methods import breadth_search, depth_first_search
 from modules.dijkstra import dijkstra_algorithm
+from modules.edge import Edge, EdgeDirected
 
 
 class Screen(object):
@@ -27,8 +28,8 @@ class Screen(object):
             'modules/fonts/roboto/Roboto-Black.ttf', 15)
 
         # init programm with menu screen
-        # self.switch_to_menu()
-        self.switch_to_graph()
+        self.switch_to_menu()
+        # self.switch_to_graph()
 
     def switch_to_menu(self):
         del self.menu
@@ -36,12 +37,14 @@ class Screen(object):
         self.keys_listener_selected = self.menu.keys_listener
         self.draw_screen_selected = self.menu.draw
 
-    def switch_to_graph(self, qtt_nodes=10, qtt_edges=10):
+    def switch_to_graph(self, qtt_nodes=10, qtt_edges=10, edge_type=0):
         del self.graph
         del self.graph_screen
 
         self.graph_screen = GraphScreen(self.screen, self, self.clock)
         self.graph = Graph(self.graph_screen)
+        # edge type = 0 (undirected) and 1 (directed)
+        self.graph.set_edge_type(edge_type)
 
         self.graph_screen.set_graph(self.graph)
         self.graph_screen.set_generate_graph(

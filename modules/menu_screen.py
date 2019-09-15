@@ -1,6 +1,7 @@
 import pygame
 from modules.config import *
 from modules.screen_objects import Button, Input
+from modules.edge import Edge, EdgeDirected
 
 
 class Menu(object):
@@ -11,6 +12,7 @@ class Menu(object):
         self.input_number_nodes = Input(100, 100)
         self.input_number_edges = Input(250, 100)
         self.button = Button('OK', 350, 100)
+        self.button_edge_dir = Button('Aresta Direcionada', 100, 150)
         self.font = pygame.font.Font(
             'modules/fonts/roboto/Roboto-Black.ttf', 15)
         self.text_warning = ''
@@ -22,7 +24,8 @@ class Menu(object):
         self.input_number_nodes.draw(self.screen)
         self.input_number_edges.draw(self.screen)
 
-        # Draw Button
+        # Draw Buttons
+        self.button_edge_dir.draw(self.screen)
         self.button.draw(self.screen)
 
         # render labels
@@ -60,6 +63,11 @@ class Menu(object):
                 else:
                     self.input_number_edges.active = False
 
+                # if clicked on Button Edge Directed
+                if self.button_edge_dir.box.collidepoint(event.pos):
+                    # active or not edge directeds
+                    self.button_edge_dir.clicked()
+
                 # if clicked on Button Confirm
                 if self.button.box.collidepoint(event.pos):
                     self.text_warning = ''
@@ -78,8 +86,9 @@ class Menu(object):
                     if qtt_edges > max_edges:
                         self.text_warning = "Numero de Arestas maior do que o maximo possivel!"
                     else:
+                        edge_type = 0 if self.button_edge_dir.active is False else 1
                         self.screen_manager.switch_to_graph(
-                            qtt_nodes, qtt_edges)
+                            qtt_nodes, qtt_edges, edge_type)
                 else:
                     self.button.active = False
 
