@@ -3,6 +3,8 @@ from math import cos, sin, atan, sqrt, pi
 from modules.config import *
 from modules.node import Node
 
+weight_rate = 4
+
 
 class Edge(object):
     index = 0
@@ -11,11 +13,16 @@ class Edge(object):
     path_tracked_color = YELLOW
 
     def __init__(self):
-        self.__node_start: Node
-        self.__node_end: Node
+        self.__node_start: Node = None
+        self.__node_end: Node = None
         self.color = Edge.no_path_tracking_color
         self.value = Edge.index
         self.thickness = 7
+        self.font = pygame.font.Font(
+            'modules/fonts/roboto/Roboto-Black.ttf', 15)
+        self.weight = 0
+        self.weight_posX = None
+        self.weight_posY = None
         Edge.index += 1
 
     @property
@@ -25,6 +32,8 @@ class Edge(object):
     @node_start.setter
     def node_start(self, node):
         self.__node_start = node
+        if self.__node_start and self.__node_end:
+            self.update_weight()
 
     @property
     def node_end(self):
@@ -33,12 +42,26 @@ class Edge(object):
     @node_end.setter
     def node_end(self, node):
         self.__node_end = node
+        if self.__node_start and self.__node_end:
+            self.update_weight()
+
+    def update_weight(self):
+        self.weight = int((sqrt(pow(self.__node_end.posX - self.__node_start.posX, 2) +
+                                pow(self.__node_end.posY - self.__node_start.posY, 2))) / 4)
+        self.weight_posX = (self.__node_start.posX +
+                            self.__node_end.posX) / 2
+        self.weight_posY = (self.__node_start.posY +
+                            self.__node_end.posY) / 2
 
     def draw(self, screen):
+        self.update_weight()
         pygame.draw.line(
             screen, self.color, (
                 self.__node_start.posX, self.__node_start.posY), (
                     self.node_end.posX, self.node_end.posY), self.thickness)
+        # draw weight
+        node_text = self.font.render(str(self.weight), True, RED)
+        screen.blit(node_text, (self.weight_posX, self.weight_posY))
 
 
 class EdgeDirected(Edge):
@@ -48,6 +71,11 @@ class EdgeDirected(Edge):
         self.color = Edge.no_path_tracking_color
         self.value = Edge.index
         self.thickness = 5
+        self.font = pygame.font.Font(
+            'modules/fonts/roboto/Roboto-Black.ttf', 15)
+        self.weight = 0
+        self.weight_posX = None
+        self.weight_posY = None
         # points of edge arrow
         self.px = (0, 0)
         self.py = (0, 0)
@@ -79,10 +107,22 @@ class EdgeDirected(Edge):
         if self.__node_start and self.__node_end:
             self.calculate_arrow()
 
+    def update_weight(self):
+        self.weight = int((sqrt(pow(self.__node_end.posX - self.__node_start.posX, 2) +
+                                pow(self.__node_end.posY - self.__node_start.posY, 2))) / 4)
+        self.weight_posX = (self.__node_start.posX +
+                            self.__node_end.posX) / 2
+        self.weight_posY = (self.__node_start.posY +
+                            self.__node_end.posY) / 2
+
     def draw(self, screen):
+        self.update_weight()
         self.calculate_arrow()
         pygame.draw.polygon(screen, self.color, ((
             self.px, self.py), self.p2, self.p3, self.p4, self.p5, self.p6, self.p7))
+        # draw weight
+        node_text = self.font.render(str(self.weight), True, RED)
+        screen.blit(node_text, (self.weight_posX, self.weight_posY))
 
     def calculate_arrow(self):
         # nodes coordinates

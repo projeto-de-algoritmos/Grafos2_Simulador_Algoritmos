@@ -64,11 +64,6 @@ class GraphScreen(object):
         for edge in self.edges:
             edge.draw(self.screen)
 
-        # edgedirected = EdgeDirected()
-        # edgedirected.node_start = self.nodes[0]
-        # edgedirected.node_end = self.nodes[1]
-        # edgedirected.draw(self.screen)
-
         # Draw Nodes
         for node in self.nodes:
             node_text = self.font.render(str(node.value), True, WHITE)
