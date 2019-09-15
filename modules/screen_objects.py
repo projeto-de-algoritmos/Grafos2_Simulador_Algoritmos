@@ -1,5 +1,6 @@
 import pygame
 import pygame.gfxdraw
+from modules.config import *
 
 
 class Button(object):
@@ -16,6 +17,11 @@ class Button(object):
         self.active = False
         self.text = text
         self.done = False
+
+    def set_colors(self, color_active, color_inactive):
+        self.color_active = color_active
+        self.color_inactive = color_inactive
+        self.color = self.color_inactive
 
     def set_font_size(self, size):
         self.font = pygame.font.Font(None, size)

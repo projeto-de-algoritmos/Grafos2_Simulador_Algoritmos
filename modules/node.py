@@ -20,6 +20,8 @@ class Node(object):
             exit()
         self.neighbors = []
         self.visited = False
+        self.topological_count = 0
+        self.active = True
         self.color = None
         self.__original_color = None
         self.__posX = None
@@ -60,6 +62,15 @@ class Node(object):
         neighbor.node = node
         neighbor.edge = edge
         self.neighbors.append(neighbor)
+
+    def remove_neighbor(self, neighbor):
+        '''
+            Remove a neighbor
+        '''
+        for index in range(len(self.neighbors)):
+            if self.neighbors[index] == neighbor:
+                self.neighbors.pop(index)
+                break
 
     def get_value_neighbors(self):
         values = []

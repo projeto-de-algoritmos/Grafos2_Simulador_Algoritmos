@@ -20,16 +20,21 @@ class GraphScreen(object):
         self.nodes = []
         self.edges = []
         self.enqueue_nodes = []
-        self.search_algorithm1 = None
-        self.search_algorithm2 = None
-        self.search_algorithm_current = None
-        self.dijkstra = None
+        self.search_bfs = None
+        self.search_dfs = None
+        self.algorithm_current = None
+        self.dijkstra_algorithm = None
+        self.topological_algorithm = None
         self.generate_graph = None
         self.edge_weight = True
+        self.show_edge_dir = False
 
         # objects
         self.label_warning = None
         self.button_menu = Button('Menu', 20, SCREEN_HEIGHT - 50)
+        self.button_topological = Button(
+            'TOP', SCREEN_WIDTH - 300, SCREEN_HEIGHT - 50)
+        self.button_topological.set_colors(RED, LIGHT_RED)
         self.button_type_bfs = Button(
             'BFS', SCREEN_WIDTH - 220, SCREEN_HEIGHT - 50)
         self.button_type_dfs = Button(
@@ -53,16 +58,22 @@ class GraphScreen(object):
     def set_generate_graph(self, generate_graph):
         self.generate_graph = generate_graph
 
-    def set_search_algorithm(self, search_algorithm1=None, search_algorithm2=None):
-        self.search_algorithm1 = search_algorithm1
-        self.search_algorithm2 = search_algorithm2
-        self.search_algorithm_current = search_algorithm1
+    def set_search_algorithm(self, search_bfs=None, search_dfs=None):
+        self.search_bfs = search_bfs
+        self.search_dfs = search_dfs
+        self.algorithm_current = search_bfs
 
     def set_dijkstra_algorithm(self, dijkstra):
-        self.dijkstra = dijkstra
+        self.dijkstra_algorithm = dijkstra
 
-    def set_search_algorithm_current(self, search_algorithm):
-        self.search_algorithm_current = search_algorithm
+    def set_topological(self, topological):
+        self.topological_algorithm = topological
+
+    def set_algorithm_current(self, search_algorithm):
+        self.algorithm_current = search_algorithm
+
+    def set_show_edge_dir(self, edge_type):
+        self.show_edge_dir = edge_type
 
     def disable_edge_weight(self):
         self.edge_weight = False
@@ -83,6 +94,7 @@ class GraphScreen(object):
 
         # Draw Buttons
         self.button_menu.draw(self.screen)
+        self.button_topological.draw(self.screen)
         self.button_type_bfs.draw(self.screen)
         self.button_type_dfs.draw(self.screen)
         self.button_type_dijkstra.draw(self.screen)
@@ -132,35 +144,50 @@ class GraphScreen(object):
                     self.button_menu.clicked()
                     self.screen_manager.switch_to_menu()
 
-                if self.button_type_bfs.box.collidepoint(event.pos):
+                # select topological order
+                if (self.button_topological.box.collidepoint(event.pos) and
+                        self.topological_algorithm and self.show_edge_dir):
+                    # prevent error with node already selected
+                    self.enqueue_nodes = []
+                    self.clear_path()
+                    if self.button_topological.active is False:
+                        self.button_topological.clicked()
+                        self.button_current_algorithm.clicked()
+                        self.button_current_algorithm = self.button_topological
+
+                        # set algorithm
+                        self.set_algorithm_current(
+                            self.topological_algorithm)
+
+                if self.button_type_bfs.box.collidepoint(event.pos) and self.search_bfs:
                     if self.button_type_bfs.active is False:
                         self.button_type_bfs.clicked()
                         self.button_current_algorithm.clicked()
                         self.button_current_algorithm = self.button_type_bfs
 
                         # set algorithm
-                        self.set_search_algorithm_current(
-                            self.search_algorithm1)
+                        self.set_algorithm_current(
+                            self.search_bfs)
 
-                if self.button_type_dfs.box.collidepoint(event.pos):
+                if self.button_type_dfs.box.collidepoint(event.pos) and self.search_dfs:
                     if self.button_type_dfs.active is False:
                         self.button_type_dfs.clicked()
                         self.button_current_algorithm.clicked()
                         self.button_current_algorithm = self.button_type_dfs
 
                         # set algorithm
-                        self.set_search_algorithm_current(
-                            self.search_algorithm2)
+                        self.set_algorithm_current(
+                            self.search_dfs)
 
-                if self.button_type_dijkstra.box.collidepoint(event.pos) and self.edge_weight:
+                if self.button_type_dijkstra.box.collidepoint(event.pos) and self.dijkstra_algorithm and self.edge_weight:
                     if self.button_type_dijkstra.active is False:
                         self.button_type_dijkstra.clicked()
                         self.button_current_algorithm.clicked()
                         self.button_current_algorithm = self.button_type_dijkstra
 
                         # set algorithm
-                        self.set_search_algorithm_current(
-                            self.dijkstra)
+                        self.set_algorithm_current(
+                            self.dijkstra_algorithm)
 
     def create_node(self, node):
 
@@ -204,8 +231,12 @@ class GraphScreen(object):
         for node in self.enqueue_nodes:
             print(node.value, end=", ")
         print()
+        if len(self.enqueue_nodes) == 1 and self.algorithm_current == self.topological_algorithm:
+            self.algorithm_current(
+                self.graph, self.enqueue_nodes[0])
+            self.enqueue_nodes = []
         if len(self.enqueue_nodes) >= 2:
-            self.search_algorithm_current(
+            self.algorithm_current(
                 self.graph, self.enqueue_nodes[0], self.enqueue_nodes[1])
             self.enqueue_nodes = []
 

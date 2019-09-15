@@ -7,6 +7,7 @@ from modules.graph_screen import GraphScreen
 from modules.graph import Graph
 from modules.search_methods import breadth_search, depth_first_search
 from modules.dijkstra import dijkstra_algorithm
+from modules.topological import topological_order
 from modules.edge import Edge, EdgeDirected
 
 
@@ -54,9 +55,11 @@ class Screen(object):
         self.graph_screen.set_graph(self.graph)
         self.graph_screen.set_generate_graph(
             self.graph.automatic_generation_graph)
+        self.graph_screen.set_show_edge_dir(edge_type)
         self.graph_screen.set_search_algorithm(
             breadth_search, depth_first_search)
         self.graph_screen.set_dijkstra_algorithm(dijkstra_algorithm)
+        self.graph_screen.set_topological(topological_order)
 
         self.graph_screen.start(qtt_nodes, qtt_edges)
         self.keys_listener_selected = self.graph_screen.keys_listener

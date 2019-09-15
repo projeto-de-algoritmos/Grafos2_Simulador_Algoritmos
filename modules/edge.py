@@ -22,6 +22,7 @@ class Edge(object):
         self.lenght_posX = None
         self.lenght_posY = None
         self.show_weight: int = 0
+        self.isReverse = False
         Edge.index += 1
 
     @property
@@ -83,6 +84,7 @@ class EdgeDirected(Edge):
         self.lenght_posX = None
         self.lenght_posY = None
         self.show_weight: int = 0
+        self.isReverse = False
         # points of edge arrow
         self.px = (0, 0)
         self.py = (0, 0)
