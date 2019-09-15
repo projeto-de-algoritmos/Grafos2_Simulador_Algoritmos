@@ -37,7 +37,7 @@ class Screen(object):
         self.keys_listener_selected = self.menu.keys_listener
         self.draw_screen_selected = self.menu.draw
 
-    def switch_to_graph(self, qtt_nodes=10, qtt_edges=10, edge_type=0):
+    def switch_to_graph(self, qtt_nodes=10, qtt_edges=10, edge_type=0, edge_weight=0):
         del self.graph
         del self.graph_screen
 
@@ -45,6 +45,11 @@ class Screen(object):
         self.graph = Graph(self.graph_screen)
         # edge type = 0 (undirected) and 1 (directed)
         self.graph.set_edge_type(edge_type)
+        self.graph.set_edge_weight(edge_weight)
+
+        # disable algorithms that needs edges weight
+        if edge_weight == 0:
+            self.graph_screen.disable_edge_weight()
 
         self.graph_screen.set_graph(self.graph)
         self.graph_screen.set_generate_graph(

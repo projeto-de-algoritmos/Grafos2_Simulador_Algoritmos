@@ -21,6 +21,7 @@ class Edge(object):
         self.lenght = 0
         self.lenght_posX = None
         self.lenght_posY = None
+        self.show_weight: int = 0
         Edge.index += 1
 
     @property
@@ -43,6 +44,9 @@ class Edge(object):
         if self.__node_start and self.__node_end:
             self.update_lenght()
 
+    def set_show_weight(self, edge_weight=0):
+        self.show_weight = edge_weight
+
     def update_lenght(self):
         self.lenght = int((sqrt(pow(self.__node_end.posX - self.__node_start.posX, 2) +
                                 pow(self.__node_end.posY - self.__node_start.posY, 2))) / 4)
@@ -58,8 +62,9 @@ class Edge(object):
                 self.__node_start.posX, self.__node_start.posY), (
                     self.node_end.posX, self.node_end.posY), self.thickness)
         # draw lenght
-        node_text = font.render(str(self.lenght), True, RED)
-        screen.blit(node_text, (self.lenght_posX, self.lenght_posY))
+        if self.show_weight:
+            node_text = font.render(str(self.lenght), True, RED)
+            screen.blit(node_text, (self.lenght_posX, self.lenght_posY))
 
 
 class EdgeDirected(Edge):
@@ -77,6 +82,7 @@ class EdgeDirected(Edge):
         self.lenght = 0
         self.lenght_posX = None
         self.lenght_posY = None
+        self.show_weight: int = 0
         # points of edge arrow
         self.px = (0, 0)
         self.py = (0, 0)
@@ -108,6 +114,9 @@ class EdgeDirected(Edge):
         if self.__node_start and self.__node_end:
             self.calculate_arrow()
 
+    def set_show_weight(self, edge_weight=0):
+        self.show_weight = edge_weight
+
     def update_lenght(self):
         self.lenght = int((sqrt(pow(self.__node_end.posX - self.__node_start.posX, 2) +
                                 pow(self.__node_end.posY - self.__node_start.posY, 2))) / 4)
@@ -122,8 +131,9 @@ class EdgeDirected(Edge):
         pygame.draw.polygon(screen, self.color, ((
             self.px, self.py), self.p2, self.p3, self.p4, self.p5, self.p6, self.p7))
         # draw lenght
-        node_text = font.render(str(self.lenght), True, RED)
-        screen.blit(node_text, (self.lenght_posX, self.lenght_posY))
+        if self.show_weight:
+            node_text = font.render(str(self.lenght), True, RED)
+            screen.blit(node_text, (self.lenght_posX, self.lenght_posY))
 
     def calculate_arrow(self):
         # nodes coordinates

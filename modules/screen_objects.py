@@ -17,6 +17,9 @@ class Button(object):
         self.text = text
         self.done = False
 
+    def set_font_size(self, size):
+        self.font = pygame.font.Font(None, size)
+
     def set_pos(self, posX, posY):
         self.posX = posX
         self.posY = posY

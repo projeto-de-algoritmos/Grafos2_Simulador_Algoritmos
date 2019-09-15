@@ -9,6 +9,7 @@ class Graph(object):
     def __init__(self, screen):
         self.screen = screen
         self.edge_type: int = 0
+        self.edge_weight: int = 0
         self.nodes = []
         self.edges = []
         self.array_nodes_posX = []
@@ -42,6 +43,9 @@ class Graph(object):
     def set_edge_type(self, edge_type):
         self.edge_type = edge_type
 
+    def set_edge_weight(self, edge_weight):
+        self.edge_weight = edge_weight
+
     def create_nodes(self, values=[]):
         nodes = []
         for value in values:
@@ -61,6 +65,7 @@ class Graph(object):
 
         for neighbor in neighbors:
             edge = Edge()
+            edge.set_show_weight(self.edge_weight)
             edge = self.__make_edge_screen(node, neighbor, edge)
             node.add_neighbor(neighbor, edge)
             neighbor.add_neighbor(node, edge)
@@ -73,6 +78,7 @@ class Graph(object):
 
         for neighbor in neighbors:
             edge = EdgeDirected()
+            edge.set_show_weight(self.edge_weight)
             edge = self.__make_edge_screen(node, neighbor, edge)
             node.add_neighbor(neighbor, edge)
             self.edges.append(edge)

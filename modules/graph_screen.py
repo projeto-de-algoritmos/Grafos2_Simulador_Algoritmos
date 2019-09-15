@@ -25,7 +25,7 @@ class GraphScreen(object):
         self.search_algorithm_current = None
         self.dijkstra = None
         self.generate_graph = None
-        self.edge_current = None
+        self.edge_weight = True
 
         # objects
         self.text_warning = ''
@@ -64,8 +64,8 @@ class GraphScreen(object):
     def set_search_algorithm_current(self, search_algorithm):
         self.search_algorithm_current = search_algorithm
 
-    def set_edge_current(self, edge_type):
-        self.edge_current = edge_type
+    def disable_edge_weight(self):
+        self.edge_weight = False
 
     def draw(self, clock_fps=30):
         # redraw screen
@@ -152,7 +152,7 @@ class GraphScreen(object):
                         self.set_search_algorithm_current(
                             self.search_algorithm2)
 
-                if self.button_type_dijkstra.box.collidepoint(event.pos):
+                if self.button_type_dijkstra.box.collidepoint(event.pos) and self.edge_weight:
                     if self.button_type_dijkstra.active is False:
                         self.button_type_dijkstra.clicked()
                         self.button_current_algorithm.clicked()
