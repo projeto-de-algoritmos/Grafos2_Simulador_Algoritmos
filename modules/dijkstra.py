@@ -2,6 +2,7 @@
     File with Dijkstra algorithm
 '''
 from copy import deepcopy
+from modules.config import *
 from modules.node import Node
 from modules.heap import HeapDijkstra
 
@@ -74,11 +75,19 @@ def dijkstra_algorithm(graph, initial_node, end_node):
         # heap.show_nodes()
 
     # end
-    print("distance %s, origin %s -> end %s" %
-          (heap_root[0], first_node.value, dest_node.value))
-    # paint path until root of tree
-    graph.paint_tracked_edges(heap_root[1])
-    graph.change_color_node(
-        initial_node, Node.path_tracked_color)
-    graph.change_color_node(
-        end_node, Node.path_tracked_color)
+    if heap_root[1] == dest_node and heap_root[2]:
+        print("distance %s, origin %s -> end %s" %
+              (heap_root[0], first_node.value, dest_node.value))
+        # paint path until root of tree
+        graph.paint_tracked_edges(heap_root[1])
+        graph.change_color_node(
+            initial_node, Node.path_tracked_color)
+        graph.change_color_node(
+            end_node, Node.path_tracked_color)
+        graph.screen.set_warning('Custo do %s até %s: %s' % (
+            first_node.value, dest_node.value, heap_root[0]), GREEN)
+    elif heap_root[2] == None:
+        # if last node went picked without an node origin
+        print('Impossivel ligar os dois Vertices')
+        graph.screen.set_warning('Impossivel ligar os dois Vertices')
+    return

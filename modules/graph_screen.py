@@ -28,7 +28,7 @@ class GraphScreen(object):
         self.edge_weight = True
 
         # objects
-        self.text_warning = ''
+        self.label_warning = None
         self.button_menu = Button('Menu', 20, SCREEN_HEIGHT - 50)
         self.button_type_bfs = Button(
             'BFS', SCREEN_WIDTH - 220, SCREEN_HEIGHT - 50)
@@ -88,9 +88,9 @@ class GraphScreen(object):
         self.button_type_dijkstra.draw(self.screen)
 
         # render warning
-        label_warning = self.font.render(self.text_warning, True, RED)
-        self.screen.blit(label_warning,
-                         (SCREEN_WIDTH / 4, SCREEN_HEIGHT - 30))
+        if self.label_warning:
+            self.screen.blit(self.label_warning,
+                             (SCREEN_WIDTH / 4, SCREEN_HEIGHT - 30))
 
         pygame.display.flip()
         self.clock.tick(clock_fps)
@@ -183,7 +183,7 @@ class GraphScreen(object):
         '''
             apagar caminho da busca anterior
         '''
-        self.text_warning = ''
+        self.set_warning('')
         for edge in self.edges:
             edge.color = edge.no_path_tracking_color
 
@@ -228,5 +228,5 @@ class GraphScreen(object):
         node.posX += change_posX
         node.posY += change_posY
 
-    def set_warning(self, text):
-        self.text_warning = text
+    def set_warning(self, text, color=RED):
+        self.label_warning = self.font.render(text, True, color)

@@ -19,6 +19,11 @@ class Menu(object):
         self.font = pygame.font.Font(
             'modules/fonts/roboto/Roboto-Black.ttf', 15)
         self.text_warning = ''
+        self.start()
+
+    def start(self):
+        # active with default
+        self.button_edge_weight.clicked()
 
     def draw(self, clock_fps=30):
         # redraw screen
