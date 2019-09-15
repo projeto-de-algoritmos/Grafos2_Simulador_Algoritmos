@@ -4,7 +4,7 @@ import math
 class HeapDijkstra(object):
     def __init__(self, nodes: list = []):
         '''
-            structure node: (edge_lengh, destination_node, origin_node)
+            structure node: (edge_lengh, dest_node, origin_node, edge_between)
         '''
         self.nodes = [None]
 
@@ -20,13 +20,15 @@ class HeapDijkstra(object):
         print('[', end='')
         for index in range(1, len(nodes)):
             if index < len(nodes) - 1:
-                print('(%s, %s, %s)' % (
+                print('(%s, %s, %s, %s)' % (
                     nodes[index][0], nodes[index][1].value,
-                    nodes[index][2].value if nodes[index][2] else None), end=',\n')
+                    nodes[index][2].value if nodes[index][2] else None,
+                    nodes[index][3].value if nodes[index][3] else None), end=',\n')
             else:
-                print('(%s, %s, %s)' % (
+                print('(%s, %s, %s, %s)' % (
                     nodes[index][0], nodes[index][1].value,
-                    nodes[index][2].value if nodes[index][2] else None), end='')
+                    nodes[index][2].value if nodes[index][2] else None,
+                    nodes[index][3].value if nodes[index][3] else None), end='')
         print(']\n')
 
     def add_node(self, node):
@@ -34,7 +36,7 @@ class HeapDijkstra(object):
         self.nodes.append(node)
         self.__shift_up(node, position_index)
 
-    def update_node_lenght(self, node, new_origin_node, new_lenght):
+    def update_node_lenght(self, node, new_origin_node, new_lenght, edge):
         '''
             atualiza o custo do caminho ate o node se for menor que o custo atual
             arg node eh o dest_node
@@ -44,6 +46,7 @@ class HeapDijkstra(object):
                 if self.nodes[index][0] == None or new_lenght < self.nodes[index][0]:
                     self.nodes[index][0] = new_lenght
                     self.nodes[index][2] = new_origin_node
+                    self.nodes[index][3] = edge
                     self.__shift_up(self.nodes[index], index)
                 return
 

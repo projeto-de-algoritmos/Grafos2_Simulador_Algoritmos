@@ -63,6 +63,11 @@ class Edge(object):
 
 
 class EdgeDirected(Edge):
+    index = 0
+    no_path_tracking_color = DARK_GRAY
+    path_tracking_color = LIGHT_BLUE
+    path_tracked_color = YELLOW
+
     def __init__(self):
         self.__node_start: Node = None
         self.__node_end: Node = None

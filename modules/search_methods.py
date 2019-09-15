@@ -90,9 +90,6 @@ def depth_first_search_recursion(graph, initial_node: Node, end_node: Node):
             # desenha caminho de busca
             graph.paint_tracking_edges(
                 neighbor.edge, node, neighbor.node, 1)
-            # arvore de busca
-            add_child_tree(
-                node, neighbor.node, neighbor.edge)
 
             # verificar se eh o node procurado
             if neighbor.node.value == end_node.value:
