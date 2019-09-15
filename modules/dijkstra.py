@@ -2,6 +2,7 @@
     File with Dijkstra algorithm
 '''
 from copy import deepcopy
+from modules.node import Node
 from modules.heap import HeapDijkstra
 
 
@@ -37,34 +38,47 @@ def add_child_tree(parent_node, child_node, edge):
     child_node.parent.node = parent_node
 
 
+def prepare_to_tree(nodes):
+    for node in nodes:
+        node.childs = []
+        node.parent = type('', (), {})()
+
+
 def dijkstra_algorithm(graph, initial_node, end_node):
     '''
         Algoritmo dijkstra de menor caminho em grafos com pesos
     '''
-    nodes = graph.nodes
     # proteger a estrutura original
-    graph_nodes = deepcopy(nodes)
+    graph_nodes = deepcopy(graph.nodes)
     first_node = graph_nodes[initial_node.value]
     dest_node = graph_nodes[end_node.value]
+
+    prepare_to_tree(graph_nodes)
 
     # heap para priorizar o menor caminho
     heap = start_heap(first_node, graph_nodes)
     heap.show_nodes()
 
-    print("Caminho:")
     while True:
         heap_root = heap.get_root()
-        print(heap_root[1].value, end=", ")
-        # paint edge
+        # print(heap_root[1].value, end=", ")
+        # paint edge and add on tree backtrack
         if heap_root[3]:
             graph.paint_tracking_edges(
                 heap_root[3], heap_root[1], heap_root[2])
+            add_child_tree(heap_root[2], heap_root[1], heap_root[3])
         # desenha caminho de busca
         if heap_root[1] == dest_node:
             break
         update_edge_neighbors(heap_root, heap)
-        heap.show_nodes()
-    print()
+        # heap.show_nodes()
 
+    # end
     print("distance %s, origin %s -> end %s" %
-          (heap_root[0], heap_root[2].value, heap_root[1].value))
+          (heap_root[0], first_node.value, dest_node.value))
+    # paint path until root of tree
+    graph.paint_tracked_edges(heap_root[1])
+    graph.change_color_node(
+        initial_node, Node.path_tracked_color)
+    graph.change_color_node(
+        end_node, Node.path_tracked_color)

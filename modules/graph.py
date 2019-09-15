@@ -167,8 +167,8 @@ class Graph(object):
             neighbors = self.__return_random_nodes(
                 node, qtt_average, qtt_edges_remainder)
             qtt_edges_remainder -= len(neighbors)
-            # self.create_relationship(node, neighbors)
-            self.create_relationship_directed(node, neighbors)
+            self.create_relationship(node, neighbors)
+            # self.create_relationship_directed(node, neighbors)
             index_node = (index_node + 1) % (qtt_nodes)
 
     def automatic_generation_graph(self, qtt_nodes: int, qtt_edges: int):
