@@ -65,7 +65,7 @@ def topological_bfs_components(nodes):
                 return node
 
     component_count = 0
-    while component_count < 5 and False in list(map(lambda node: node.visited, nodes)):
+    while component_count < len(nodes) and False in list(map(lambda node: node.visited, nodes)):
         print("\nComponent %d:" % component_count)
         node = node_count_bigger()
         topological_bfs(node)

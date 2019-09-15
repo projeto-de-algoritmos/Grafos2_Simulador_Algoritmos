@@ -1,7 +1,7 @@
 # Grafos2
 
 **Número da Lista**: 2  
-**Conteúdo da Disciplina**: XXXXXXXXXX  
+**Conteúdo da Disciplina**:
 
 ## Alunos
 
@@ -11,21 +11,30 @@
 
 ## Sobre
 
-Descreva os objetivos do seu projeto e como ele funciona.
+Este projeto consiste em uma ferramenta para a visualização gráfica do funcionamento do algoritmos de busca Breadth First Search, Depth First Search e algoritmo de Dijkstra para menor caminho em grafos com arestas que possuem pesos ou custos. Além do algoritmo de ordenação Topológica(não implementado graficamente)
 
 ## Screenshots
 
-Adicione 3 ou mais screenshots do projeto em funcionamento.
+![img1](img/screenshot_graph.png)
+
+![img2](img/screenshot_menu.png)
+
+![img3](img/screenshot_dijkstra.png)
 
 ## Instalação
 
 **Linguagem**: Python 3.7  
-Descreva os pré-requisitos para rodar o seu projeto e os comandos necessários.
+
+### Dependências
+
+Para utilizar este programa, deve-se instalar as dependências:
+
+    sudo apt-get update
+    sudo apt-get install python-pip
+    pip install -r requirements.txt
 
 ## Uso
 
-Explique como usar seu projeto caso haja algum passo a passo após o comando de execução.
+Para iniciar o programa:
 
-## Outros
-
-Quaisquer outras informações sobre seu projeto podem ser descritas abaixo.
+    python main.py
