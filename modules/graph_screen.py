@@ -24,23 +24,27 @@ class GraphScreen(object):
         self.search_algorithm1 = None
         self.search_algorithm2 = None
         self.search_algorithm_current = None
+        self.dijkstra = None
         self.generate_graph = None
 
         # objects
         self.text_warning = ''
         self.button_menu = Button('Menu', 20, SCREEN_HEIGHT - 50)
         self.button_type_bfs = Button(
-            'BFS', SCREEN_WIDTH - 120, SCREEN_HEIGHT - 50)
+            'BFS', SCREEN_WIDTH - 220, SCREEN_HEIGHT - 50)
         self.button_type_dfs = Button(
-            'DFS', SCREEN_WIDTH - 60, SCREEN_HEIGHT - 50)
-        self.button_current_search = None
+            'DFS', SCREEN_WIDTH - 160, SCREEN_HEIGHT - 50)
+        self.button_type_dijkstra = Button(
+            'Dijkstra', SCREEN_WIDTH - 100, SCREEN_HEIGHT - 50)
+
+        self.button_current_algorithm = None
         self.node_selected = None
 
     def start(self, qtt_nodes, qtt_edges):
         self.nodes = []
         self.edges = []
         self.button_type_bfs.clicked()
-        self.button_current_search = self.button_type_bfs
+        self.button_current_algorithm = self.button_type_bfs
         self.generate_graph(qtt_nodes, qtt_edges)
 
     def set_graph(self, graph):
@@ -54,6 +58,9 @@ class GraphScreen(object):
         self.search_algorithm2 = search_algorithm2
         self.search_algorithm_current = search_algorithm1
 
+    def set_dijkstra_algorithm(self, dijkstra):
+        self.dijkstra = dijkstra
+
     def set_search_algorithm_current(self, search_algorithm):
         self.search_algorithm_current = search_algorithm
 
@@ -62,7 +69,7 @@ class GraphScreen(object):
         self.screen.fill(LIGHT_GRAY)
         # Draw edges
         for edge in self.edges:
-            edge.draw(self.screen)
+            edge.draw(self.screen, self.font)
 
         # Draw Nodes
         for node in self.nodes:
@@ -75,6 +82,7 @@ class GraphScreen(object):
         self.button_menu.draw(self.screen)
         self.button_type_bfs.draw(self.screen)
         self.button_type_dfs.draw(self.screen)
+        self.button_type_dijkstra.draw(self.screen)
 
         # render warning
         label_warning = self.font.render(self.text_warning, True, RED)
@@ -124,22 +132,32 @@ class GraphScreen(object):
                 if self.button_type_bfs.box.collidepoint(event.pos):
                     if self.button_type_bfs.active is False:
                         self.button_type_bfs.clicked()
-                        self.button_current_search.clicked()
-                        self.button_current_search = self.button_type_bfs
+                        self.button_current_algorithm.clicked()
+                        self.button_current_algorithm = self.button_type_bfs
 
-                        # set search algorithm
+                        # set algorithm
                         self.set_search_algorithm_current(
                             self.search_algorithm1)
 
                 if self.button_type_dfs.box.collidepoint(event.pos):
                     if self.button_type_dfs.active is False:
                         self.button_type_dfs.clicked()
-                        self.button_current_search.clicked()
-                        self.button_current_search = self.button_type_dfs
+                        self.button_current_algorithm.clicked()
+                        self.button_current_algorithm = self.button_type_dfs
 
-                        # set search algorithm
+                        # set algorithm
                         self.set_search_algorithm_current(
                             self.search_algorithm2)
+
+                if self.button_type_dijkstra.box.collidepoint(event.pos):
+                    if self.button_type_dijkstra.active is False:
+                        self.button_type_dijkstra.clicked()
+                        self.button_current_algorithm.clicked()
+                        self.button_current_algorithm = self.button_type_dijkstra
+
+                        # set algorithm
+                        self.set_search_algorithm_current(
+                            self.dijkstra)
 
     def create_node(self, node):
 

@@ -19,6 +19,7 @@ class Node(object):
             print('value node (%d) already used' % (value))
             exit()
         self.neighbors = []
+        self.visited = False
         self.color = None
         self.__original_color = None
         self.__posX = None

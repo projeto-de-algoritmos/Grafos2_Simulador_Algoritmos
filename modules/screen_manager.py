@@ -6,6 +6,7 @@ from modules.menu_screen import Menu
 from modules.graph_screen import GraphScreen
 from modules.graph import Graph
 from modules.search_methods import breadth_search, depth_first_search
+from modules.dijkstra import dijkstra_algorithm
 
 
 class Screen(object):
@@ -47,6 +48,7 @@ class Screen(object):
             self.graph.automatic_generation_graph)
         self.graph_screen.set_search_algorithm(
             breadth_search, depth_first_search)
+        self.graph_screen.set_dijkstra_algorithm(dijkstra_algorithm)
 
         self.graph_screen.start(qtt_nodes, qtt_edges)
         self.keys_listener_selected = self.graph_screen.keys_listener
